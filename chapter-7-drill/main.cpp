@@ -17,6 +17,8 @@ const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+const char square_root = 's';
+const char power = 'p';
 
 // struct to hold a basic unit of an expression.
 // This can be numbers, symbols or variables
@@ -55,7 +57,7 @@ Token Token_stream::get()
 	switch (ch) {
 	case '(': case ')': case '+': case '-':
 	case '*': case '/': case '%': case ';':
-	case '=':
+	case '=': case ',':
 		return Token(ch);
 	case '.': case '0': case '1': case '2':
 	case '3': case '4': case '5': case '6':
@@ -76,8 +78,10 @@ Token Token_stream::get()
 				s += ch;
 			}
 			cin.unget();
-			if (s == "let") return Token(let);
+			if (s == "let")  return Token(let);
 			if (s == "quit") return Token(name);
+			if (s == "sqrt") return Token(square_root);
+			if (s == "pow")  return Token(power);
 			return Token(name, s);
 		}
 		error("Bad token");
@@ -174,16 +178,33 @@ double primary()
 	{	
 		double d = expression();
 	    t = ts.get();
-		if (t.kind != ')')
+		if (t.kind == ')')
+		{
+			return d;
+		}
+		else if (t.kind == ',')
+		{
+			return d;
+		}
+		else
 		{
 			error("'(' expected");
 		}
-		return d;
+	}
+	case square_root:
+	{
+		double d = expression();
+		if (d < 0) error("attempted square of negative number");
+		return sqrt(d);
 	}
 	case '-':
 		return -primary();
 	case '+':
 		return primary();
+	case power:
+	{
+		return pow(expression(), expression());
+	}
 	case number:
 		return t.value;
 	case name:
@@ -209,6 +230,14 @@ double term()
 		    if (d == 0) error("divide by zero");
 		    left /= d;
 		    break;
+		}
+		case '%':
+		{
+			int i1 = narrow_cast<int>(left);
+			int i2 = narrow_cast<int>(primary());
+			if (i2 == 0) error("%: divide by zero");
+			left = i1 % i2;
+			break;
 		}
 		default:
 			ts.unget(t);

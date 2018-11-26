@@ -19,11 +19,14 @@ Term:
     Primary
     Term * Primary
     Term / Primary
+    Term % Primary
 Primary:
     Number
     "(" Expression ")"
     - Primary
     + Primary
+    sqrt(Expression)
+    pow(Expression, Expression)
 Number:
     floating-point-literal
 */
