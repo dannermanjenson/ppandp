@@ -174,7 +174,7 @@ double primary()
 {
 	Token t = ts.get();
 	switch (t.kind) {
-	case '(':
+	case '(':             // this case has been modified by pow and does not work
 	{	
 		double d = expression();
 	    t = ts.get();
@@ -203,7 +203,7 @@ double primary()
 		return primary();
 	case power:
 	{
-		return pow(expression(), expression());
+		return pow(expression(), expression()); // this does not work correctly
 	}
 	case number:
 		return t.value;
