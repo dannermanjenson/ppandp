@@ -69,7 +69,7 @@ Token Token_stream::get()
 	    return Token(number, val);
 	}
 	default:
-		if (isalpha(ch)) 
+		if (isalpha(ch)|| ch == '#') 
 		{
 			string s;
 			s += ch;
@@ -78,8 +78,8 @@ Token Token_stream::get()
 				s += ch;
 			}
 			cin.unget();
-			if (s == "let")  return Token(let);
-			if (s == "quit") return Token(name);
+			if (s == "#")    return Token(let);
+			if (s == "quit") return Token(quit);
 			if (s == "sqrt") return Token(square_root);
 			if (s == "pow")  return Token(power);
 			return Token(name, s);
@@ -174,7 +174,7 @@ double primary()
 {
 	Token t = ts.get();
 	switch (t.kind) {
-	case '(':             // this case has been modified by pow and does not work
+	case '(':
 	{	
 		double d = expression();
 	    t = ts.get();
@@ -184,11 +184,14 @@ double primary()
 		}
 		else if (t.kind == ',')
 		{
-			return d;
+			d = pow(d, narrow_cast<int>(expression()));
+			t = ts.get(); // eat the close paren
+			if (t.kind == ')') return d;
+			error("')' expected");
 		}
 		else
 		{
-			error("'(' expected");
+			error("')' expected");
 		}
 	}
 	case square_root:
@@ -203,7 +206,7 @@ double primary()
 		return primary();
 	case power:
 	{
-		return pow(expression(), expression()); // this does not work correctly
+		return primary(); 
 	}
 	case number:
 		return t.value;
