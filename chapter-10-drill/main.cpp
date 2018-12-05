@@ -8,6 +8,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::ifstream;
+using std::ofstream;
 using std::string;
 using std::vector;
 
@@ -24,6 +25,22 @@ public:
 	int x_{ 0 };
 	int y_{ 0 };
 };
+
+// equality operator for Point Type
+bool operator==(const Point& a, const Point& b)
+{
+	if ((a.x_ == b.x_) && (a.y_ == b.y_)) return true;
+
+	return false;
+}
+
+// inequality operator for Point Type
+bool operator!=(const Point& a, const Point& b)
+{
+	if ((a.x_ != b.x_) || (a.y_ != b.y_)) return true;
+
+	return false;
+}
 
 // output operator for Point type
 std::ostream& operator<<(std::ostream& os, const Point& p)
@@ -54,23 +71,32 @@ std::istream& operator>>(std::istream& is, Point& p)
 	return is;
 }
 
+// defines enumeration for arguments we are expecting on the command line
 enum args
 {
     PROG_NAME = 0,
     IN_FILE_NAME,
+    OUT_FILE_NAME,
     NUM_ARGS,
 };
+
+// writes a vector of points to an output stream
+void outputPoints(ofstream& ost, vector<Point>& points)
+{
+	for (Point x : points)
+		ost << x << '\n';
+}
 
 // prints contents of the points vector
 void printPoints(vector<Point>& points)
 {
 	for (Point x : points)
-		cout << x << '\n';
+		cout  << '\t' << x << '\n';
 }
 
 // takes an input stream and attempts to read points from it
 // places them into vector points
-void processInputPoints(ifstream& ist, vector<Point>& points)
+void processPoints(ifstream& ist, vector<Point>& points)
 {
     for (Point p; ist >> p; ) // read all points from the file
     {
@@ -87,20 +113,45 @@ int main(int argc, char** argv)
 	}
 	try
 	{
-		std::ifstream ist{ argv[args::IN_FILE_NAME] };
+		ifstream ist{ argv[args::IN_FILE_NAME] };
+		ist.exceptions(ist.exceptions() | std::ios_base::badbit);
 
-		if (!ist) throw string("file name not found\n");
+		if (!ist) throw string("file name not found");
     
 		vector<Point> original_points;
 
-		processInputPoints(ist, original_points);
-
+		processPoints(ist, original_points);
+		ist.close();
+		cout << "Original points:" << endl;
 		printPoints(original_points);
 
+		ofstream ost{ argv[args::OUT_FILE_NAME] };
+		ost.exceptions(ost.exceptions() | std::ios_base::badbit);
+
+		if (!ost) throw string("problem with output file");
+        
+		outputPoints(ost, original_points);
+		ost.close();
+
+		ifstream readBack{ argv[args::OUT_FILE_NAME] }; // read back the output
+		readBack.exceptions(readBack.exceptions() | std::ios_base::badbit);
+
+		if (!readBack) throw string("problem reading back the output file");
+
+		vector<Point> processed_points;
+		processPoints(readBack, processed_points);
+		cout << "Processed points:" << endl;
+		printPoints(processed_points);
+
+        // uncomment this to test the failure
+		//processed_points.push_back(Point{ -1,-1 });
+
+		if (original_points != processed_points)
+			cout << "Something's wrong!\n";
 	}
 	catch (string e)
 	{
-		cout << "Error, " << e << endl;
+		cout << "Error, " << e << '\n' << endl;
 	}
 	catch (...)
 	{
