@@ -138,14 +138,20 @@ public:
 		delete[] elem;
 	}
 
-	//double operator[](int n) { return elem[n]; }
 	double& operator[](int n) { return elem[n]; }
+	double operator[](int n) const;
 };
 
+double vector2::operator[](int n) const
+{
+	return elem[n];
+}
 
 void TryThis2()
 {
 	vector2 v(10);
 	double x = v[2];
 	v[3] = x;
+	const vector2 b(25);
+	double mydub = b[10];
 }
