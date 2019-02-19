@@ -95,8 +95,75 @@ void exercise2()
     //cout << "Sum is " <<  multiplyVectors(vec6, vec7) << endl;
 }
 
+template <typename X, typename Y>
+class Pair
+{
+public:
+	Pair(X x, Y y) :
+		x_(x), y_(y)
+	{
+	}
+
+	~Pair() {}
+
+	X& getX()
+	{
+		return x_;
+	}
+
+	Y& getY()
+	{
+		return y_;
+	}
+
+private:
+    // because we don't know what the types can be, we do not want to make
+    // any assumptions about what a default state should be. Thus, we hide
+    // the default constructor to stop people from creating mutilated objects.
+	Pair();
+
+	X x_;
+	Y y_;
+};
+
+template <typename X, typename Y>
+std::ostream& operator<<(std::ostream& os, Pair<X,Y>& pair)
+{
+	return os << "(" << pair.getX() << ", " << pair.getY() << ")";
+}
+
+int ascii_char_to_digit(char ascii_char, std::vector<Pair<char,int>>&  pair)
+{
+	for (auto i : pair)
+	{
+		if (ascii_char == i.getX())
+		{
+			return i.getY();
+		}
+    }
+}
+
+void exercise3()
+{
+	Pair<int, int> my_pair{ 1, 2 };
+	Pair<double, int> my_other_pair{ 3.14, 25 };
+
+	cout << my_pair << endl;
+	cout << my_other_pair << endl;
+
+	Pair<std::string, int> test_mapping{ "Danner", 1 };
+	cout << test_mapping << endl;
+
+	vector<Pair<char, int>> ascii_digit_table{
+        {'0', 0x30}, {'1', 0x31}, {'2', 0x32}, {'3', 0x33}, {'4', 0x34}, 
+        {'5', 0x35}, {'6', 0x36}, {'7', 0x37}, {'8', 0x38}, {'9', 0x39} };
+
+	cout << std::hex << ascii_char_to_digit('4', ascii_digit_table) << endl;
+}
+
 void runExercises()
 {
 	//exercise1();
-	exercise2();
+	//exercise2();
+	exercise3();
 }
