@@ -11,4 +11,6 @@
 
 // TODO: add headers that you want to pre-compile here
 #include "drill.h"
+#include "exercises.h"
+
 #endif //PCH_H
