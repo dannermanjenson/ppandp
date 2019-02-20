@@ -60,7 +60,9 @@ void exercise1()
 	printVector(vec6);
 }
 
-// have to make an assumption about the return type
+// Function that multiplies two vectors member-wise and adds the results.
+// have to make an assumption about the return type if we want to
+// sum all vector components into a single value
 template <typename T, typename U>
 double multiplyVectors(const std::vector<T>& vt, const std::vector<U>& vu)
 {
@@ -96,6 +98,8 @@ void exercise2()
     //cout << "Sum is " <<  multiplyVectors(vec6, vec7) << endl;
 }
 
+// Pair class 
+// Practice the use of a templated class with multiple template types.
 template <typename X, typename Y>
 class Pair
 {
@@ -127,12 +131,14 @@ private:
 	Y y_;
 };
 
+// output stream operator for Pair class
 template <typename X, typename Y>
 std::ostream& operator<<(std::ostream& os, Pair<X,Y>& pair)
 {
 	return os << "(" << pair.getX() << ", " << pair.getY() << ")";
 }
 
+// function to do map translation between an ascii character to digit
 int ascii_char_to_digit(char ascii_char, std::vector<Pair<char,int>>&  pair)
 {
 	for (auto i : pair)
