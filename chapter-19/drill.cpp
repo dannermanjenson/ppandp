@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+// struct that emulates a simple version of a vector.
+// The purpose is to practice the implementation details of
+// a vector in the drill problems.
 template<typename T> 
 struct S
 {
@@ -33,12 +36,14 @@ private:
 	T val_;
 };
 
+// output operator for S struct
 template <typename T>
 std::ostream& operator<<(std::ostream& os, S<T>& obj)
 {
 	return os << obj.get();
 }
 
+// input operator for S struct
 template <typename T>
 std::istream& operator>>(std::istream& is, S<T>& obj)
 {
@@ -51,6 +56,8 @@ std::istream& operator>>(std::istream& is, S<T>& obj)
 	return is;
 }
 
+// Helper function to simplify the prompting of value reading
+// into any arbitrary T.
 template <typename T> 
 void read_val(T& v, const std::string& type)
 {
@@ -59,6 +66,7 @@ void read_val(T& v, const std::string& type)
 	std::cout << "your " << type << " is " << v << std::endl;
 }
 
+// drill exercises from 1-11
 void doDrill_1()
 {
 	S<int> my_int(10);
@@ -84,6 +92,7 @@ void doDrill_1()
 	std::cout << my_int.get() << std::endl;
 }
 
+// drill exercises from 12-14
 void doDrill_2()
 {
 	S<int> my_int(10);
