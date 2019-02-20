@@ -22,14 +22,15 @@ void addVectors(std::vector<T>& vec0, const std::vector<T>& vec1)
 	return;
 }
 
+// helper function to print the contents of a vector
 template <typename T>
 void printVector(const std::vector<T> vec)
 {
 	for (auto i : vec)
 	{
-		std::cout << i << ", ";
+		cout << i << ", ";
 	}
-	std::cout << std::endl;
+	cout << endl;
 }
 
 void exercise1()
